@@ -438,17 +438,8 @@
 																												<div id="toast" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: #333; color: #fff; padding: 10px 20px; border-radius: 5px; z-index: 1000;">
 																													<span id="toastMessage"></span>
 																												</div>
-																												        <script>
-        let isLeaving = false;
-
-        window.addEventListener('beforeunload', (event) => {
-            if (!isLeaving) {
-                event.preventDefault(); // Untuk browser modern, perlu juga untuk mencegah reload default
-                event.returnValue = ''; // Untuk browser yang mendukung returnValue
-            }
-        });
-
-        function showAlert() {
+																												            <script>
+        function confirmReload() {
             Swal.fire({
                 title: 'Yakin untuk melanjutkan?',
                 text: 'Semua link, custom text, dan UID akan hilang',
@@ -458,15 +449,25 @@
                 cancelButtonText: 'Tidak, tetap di sini'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    isLeaving = true; // Set isLeaving true untuk mengizinkan reload
-                    window.location.reload(); // Reload halaman
+                    window.location.reload(); // Reload halaman jika konfirmasi
                 }
             });
         }
 
-        window.onload = function() {
-            document.addEventListener('click', showAlert); // Menampilkan SweetAlert saat halaman akan di-reload
-        };
+        // Mencegah reload default pada tombol reload browser
+        window.addEventListener('beforeunload', (event) => {
+            // Prevent the default action
+            event.preventDefault();
+            event.returnValue = ''; // Needed for some browsers to show confirmation dialog
+        });
+
+        // Event listener untuk tombol reload khusus
+        document.addEventListener('DOMContentLoaded', () => {
+            const reloadButton = document.getElementById('reloadButton');
+            if (reloadButton) {
+                reloadButton.addEventListener('click', confirmReload);
+            }
+        });
     </script>
 																												<script>
 											
