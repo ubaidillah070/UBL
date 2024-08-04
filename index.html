@@ -344,7 +344,7 @@
 																												</div>
 																												<button type="button" class="btn btn-primary" onclick="generateText()">Generate</button>
 																												<button type="button" class="btn btn-secondary btn-copy" onclick='copyToClipboard("result")'>Copy Text</button>
-																												<div id="elementId" class="copy-success">Hasil berhasil disalin!</div>
+																												 <div id="copySuccessToast" class="copy-success">Hasil berhasil disalin!</div>
 																											</div>
 																										</div>
 																										<div class="card">
@@ -572,21 +572,20 @@ function generateRandomStrings() {
 }
 
 
-    function copyToClipboard(elementId) {
-        const outputArea = document.getElementById(elementId);
-        outputArea.select();
-        document.execCommand('copy');
-        showCopiedToast('Copied to clipboard!');
-    }
+        function copyToClipboard(elementId) {
+            const outputArea = document.getElementById(elementId);
+            outputArea.select();
+            document.execCommand('copy');
+            showCopiedToast('copySuccessToast');
+        }
 
-    function showCopiedToast(message) {
-        const toast = document.getElementById('toast');
-        toast.textContent = message;
-        toast.style.display = 'block';
-        setTimeout(() => {
-            toast.style.display = 'none';
-        }, 2000);
-    }
+        function showCopiedToast(toastId) {
+            const toast = document.getElementById(toastId);
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 2000); // Tampilkan toast selama 2 detik
+        }
 
     function updateLinkCount() {
         var linkListTextarea = document.getElementById("linkList");
