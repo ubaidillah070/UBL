@@ -438,7 +438,7 @@
 																												<div id="toast" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: #333; color: #fff; padding: 10px 20px; border-radius: 5px; z-index: 1000;">
 																													<span id="toastMessage"></span>
 																												</div>
-																												                   <script>
+																												                      <script>
         function confirmReload() {
             Swal.fire({
                 title: 'Yakin untuk melanjutkan?',
@@ -449,12 +449,19 @@
                 cancelButtonText: 'Tidak, tetap di sini'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Jika pengguna mengonfirmasi, reload halaman
-                    window.location.reload();
+                    window.location.reload(); // Reload halaman jika konfirmasi
                 }
             });
         }
 
+        // Mencegah reload default pada tombol reload browser
+        window.addEventListener('beforeunload', (event) => {
+            // Prevent the default action
+            event.preventDefault();
+            event.returnValue = ''; // Needed for some browsers to show confirmation dialog
+        });
+
+        // Event listener untuk tombol reload khusus
         document.addEventListener('DOMContentLoaded', () => {
             const reloadButton = document.getElementById('reloadButton');
             if (reloadButton) {
