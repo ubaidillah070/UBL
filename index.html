@@ -331,24 +331,42 @@ input[type="password"] {
 													<div class="copy-success" id="copyNotice">copied!</div>
 												</div>
 											</div>
-											    <script>
-        window.onbeforeunload = function(event) {
-            event.preventDefault();
-            Swal.fire({
-                title: 'Yakin untuk melanjutkan?',
-                text: 'Semua link, custom text, dan UID akan hilang',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Ya, reload',
-                cancelButtonText: 'Tidak, tetap di sini'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.onbeforeunload = null; // Hapus event listener sebelum reload
-                    location.reload();
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let isPageChanged = false;
+
+            // Deteksi perubahan pada halaman
+            document.addEventListener('input', () => {
+                isPageChanged = true;
+            });
+
+            document.addEventListener('click', (event) => {
+                if (event.target.tagName === 'A' || event.target.closest('a')) {
+                    if (isPageChanged) {
+                        event.preventDefault();
+                        Swal.fire({
+                            title: 'Yakin untuk melanjutkan?',
+                            text: 'Semua link, custom text, dan UID akan hilang',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya, lanjutkan',
+                            cancelButtonText: 'Tidak, tetap di sini'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = event.target.href || event.target.closest('a').href;
+                            }
+                        });
+                    }
                 }
             });
-            return false;
-        };
+
+            window.addEventListener('beforeunload', (event) => {
+                if (isPageChanged) {
+                    event.preventDefault();
+                    event.returnValue = ''; // Ini akan memicu prompt default browser
+                }
+            });
+        });
     </script>
 											<script>function openTab(evt, tabName) {
         var i, tabcontent, tablinks;
