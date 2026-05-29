@@ -114,18 +114,20 @@
 
   <div class="generator-box">
     <div class="title">Keyword Generator</div>
-    <div class="subtitle">Tanda <b>#</b> akan otomatis diganti menggunakan kata dari list atas.</div>
+    <div class="subtitle">
+      Semua tanda <b>#</b> akan otomatis diganti menggunakan 1 kata yang sama dari list.
+    </div>
 
     <div class="row g-4">
       <div class="col-md-6">
         <label class="form-label">Input List Kata</label>
-        <textarea id="wordList" class="form-control" placeholder="matanya&#10;hidungnya&#10;mulutnya"></textarea>
+        <textarea id="wordList" class="form-control" placeholder="apel&#10;mangga&#10;pisang"></textarea>
         <div class="helper">1 baris = 1 kata</div>
       </div>
 
       <div class="col-md-6">
         <label class="form-label">Template Kalimat</label>
-        <textarea id="templateText" class="form-control" placeholder="budi sedang memegang #"></textarea>
+        <textarea id="templateText" class="form-control" placeholder="Saya makan # lalu # dan membeli #"></textarea>
         <div class="helper">Gunakan tanda # sebagai placeholder</div>
       </div>
     </div>
@@ -159,29 +161,25 @@
 
       let template = templateInput.value;
 
-      const totalPlaceholder = (template.match(/#/g) || []).length;
-
-      if (totalPlaceholder === 0) {
-        output.textContent = 'Tidak ada tanda # pada template.';
-        return;
-      }
-
       if (words.length === 0) {
         output.textContent = 'List kata kosong.';
         return;
       }
 
-      template = template.replace(/#/, function () {
-        if (words.length === 0) {
-          return '#';
-        }
+      if (!template.includes('#')) {
+        output.textContent = 'Tidak ada tanda # pada template.';
+        return;
+      }
 
-        const word = words.shift();
-        return word;
-      });
+      // Ambil 1 kata pertama
+      const currentWord = words.shift();
 
-      output.textContent = template;
+      // Ganti SEMUA # dengan kata yang sama
+      const result = template.replace(/#/g, currentWord);
 
+      output.textContent = result;
+
+      // Update list kata tersisa
       wordInput.value = words.join('\n');
     }
 
@@ -192,12 +190,7 @@
         return;
       }
 
-      const tempInput = document.createElement('textarea');
-      tempInput.value = text;
-      document.body.appendChild(tempInput);
-      tempInput.select();
-      document.execCommand('copy');
-      document.body.removeChild(tempInput);
+      navigator.clipboard.writeText(text);
 
       showToast('Copy success');
     }
